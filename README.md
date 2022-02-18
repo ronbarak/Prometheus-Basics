@@ -25,11 +25,11 @@ Prometheus is a system monitoring and alerting system. It was opensourced by Sou
 
 # What are metrics and why is it important?
 
-Metrics in layman terms is a standard for measurement. What we want to measure depends from application to application. For a web server it can be request times, for a database it can be CPU usage or number of active connections etc.
+Metrics in layman terms is a standard for measurement. What we want to measure differs from application to application. For a web server it can be request times, for a database it can be CPU usage or number of active connections etc.
 
-Metrics play an important role in understanding why your application is working in a certain way. If you run a web application and someone comes up to you and says that the application is slow. You will need some information to find out what is happening with your application. For example the application can become slow when the number of requests are high. If you have the request count metric you can spot the reason and increase the number of servers to handle the heavy load. Whenever you are defining the metrics for your application you must put on your detective hat and ask this question **what all information will be important for me to debug if any issue occurs in my application?**
+Metrics play an important role in understanding why your application is working in a certain way. If you run a web application and someone comes up to you and says that the application is slow. You will need some information to find out what is happening with your application. For example the application can become slow when the number of requests are high. If you have the request count metric you can spot the reason and increase the number of servers to handle the heavy load. Whenever you are defining the metrics for your application you must put on your detective hat and ask this question **what information will be important for me to help debugging - if any issue occurs in my application?**
 
-Analogy: I always use this analogy to simply understand what a monitoring system does. When I was young I wanted to grow tall and to measure it I used height as a metric. I asked my dad to measure my height everyday and keep a table of my height on each day. So in this case my dad is my monitoring system and the metric was my height.
+Analogy: I use this analogy to understand what a monitoring system does. When I was young I wanted to grow tall and to measure it I used height as a metric. I asked my dad to measure my height every day and keep a table of my height on each day. So in this case my dad is my monitoring system and the metric was my height.
 
 # Basic Architecture of Prometheus
 
@@ -49,11 +49,11 @@ Let's consider a web server as an example application. I want to extract a certa
 
 I set prometheus up and expose my web server to be accessible for the frontend or other client to use.
 
-At 11:00 PM when I make the server open to consumption. Prometheus scrapes the count metric and stores the value as 0
+At 11:00 PM I make the server open to consumption. Prometheus scrapes the count metric and stores the value as 0
 
-By 11:01 PM one request is processed. The instrumentation logic in my code makes the count to 1. When prometheus scraps the metric the value of count is 1 now
+By 11:01 PM one request is processed. The instrumentation logic in my code increases the count to 1. When prometheus scraps the metric the value of count is now 1.
 
-By 11:02 PM two requests are processed and the request count is 1+2 = 3 now. Similarly metrics are scraped and stored
+By 11:02 PM two requests are processed and the request count is 1+2 = 3 now. Similarly metrics are scraped and stored.
 
 The user can control the frequency at which metrics are scraped by prometheus
 
@@ -63,9 +63,9 @@ The user can control the frequency at which metrics are scraped by prometheus
 | 11:01 PM   | 1                      |
 | 11:02 PM   | 3                      |
 
-(Note: This table is just a representation for understanding purposes. Prometheus doesn’t store the values in the exact format)
+(Note: This table is just a representation for understanding purposes. Prometheus doesn’t store the values in this exact format)
 
-Prometheus also has a server which exposes the metrics which are stored by scraping. This server is used to query the metrics, create dashboards/charts on it etc. PromQL is used to query the metrics.
+Prometheus also has a server which exposes the metrics stored by scraping. This server is used to query the metrics, create dashboards/charts on it, etc. PromQL is used to query the metrics.
 
 A simple Line chart created on my Request Count metric will look like this
 
@@ -79,7 +79,7 @@ I can scrape multiple metrics which will be useful to understand what is happeni
 
 Let’s get our hands dirty and setup prometheus. Prometheus is written using [Go](https://golang.org/) and all you need is the binary compiled for your operating system. Download the binary corresponding to your operating system from [here](https://prometheus.io/download/) and add the binary to your path.
 
-Prometheus exposes its own metrics which can be consumed by itself or another prometheus server.
+The Prometheus server exposes its own metrics which can be consumed by itself or by another prometheus server.
 
 Now that we have Prometheus, the next step is to run it. All that we need is just the binary and a configuration file. Prometheus uses yaml files for configuration.
 
@@ -103,10 +103,10 @@ In the above configuration file we have mentioned the scrape_interval i.e how fr
   <img width="580" height="400" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/prometheus1.gif">
 </p>
 
-Now we have Prometheus up and running and scraping its own metrics every 15s. Prometheus has standard exporters available to export metrics. Next we will run a node exporter which is an exporter for machine metrics and scrape the same using prometheus.
+Now we have Prometheus up and running and scraping its own metrics every 15s. Prometheus has standard exporters available to export metrics. Next we will run a node exporter— which is an exporter for machine metrics—and scrape the same using prometheus.
 Download node metrics exporter from [here](https://prometheus.io/download/#node_exporter)
 
-There are many standard exporters available like node exporter you can find them [here](https://prometheus.io/docs/instrumenting/exporters)
+There are many standard exporters available besides node exporter: you can find them [here](https://prometheus.io/docs/instrumenting/exporters)
 
 **Run the node exporter in a terminal.**
 
@@ -150,7 +150,7 @@ There are four types of metrics which prometheus client libraries support as of 
 
 ## Counter:
 
-Counter is a metric value which can only increase or reset i.e the value cannot reduce than the previous value. It can be used for metrics like number of requests, no of errors etc.
+Counter is a metric value which can only increase or reset i.e the value cannot be lower than a previous value. It can be used for metrics like number of requests, number of errors, etc.
 
 > go_gc_duration_seconds_count
 
@@ -158,7 +158,7 @@ Counter is a metric value which can only increase or reset i.e the value cannot 
   <img width="800" height="560" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/counter_example.png">
 </p>
 
-The rate() function takes the history of metrics over a time frame and calculates how fast value is increasing per second. Rate is applicable on counter values only.
+The rate() function takes the history of metrics over a time frame and calculates how fast a value increases per second. Rate is applicable for counter values only.
 
 > rate(go_gc_duration_seconds_count[5m])
 
@@ -168,7 +168,7 @@ The rate() function takes the history of metrics over a time frame and calculate
 
 ## Gauge:
 
-Gauge is a number which can either go up or down. It can be used for metrics like number of pods in a cluster, number of events in an queue etc.
+Gauge is a number which can either go up or down. It can be used for metrics like number of pods in a cluster, number of events in an queue, etc.
 
 > go_memstats_heap_alloc_bytes
 
@@ -176,11 +176,11 @@ Gauge is a number which can either go up or down. It can be used for metrics lik
   <img width="800" height="560" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/gauge_example.png">
 </p>
 
-PromQL functions like max_over_time, min_over_time and avg_over_time can be used to query gauge metrics
+PromQL functions like max_over_time, min_over_time, and avg_over_time can be used to query gauge metrics
 
 ## Histogram
 
-Histogram is a little complex metric type when compared to the ones we have seen. Histogram can be used for any calculated value which is counted based on bucket values, the buckets can be configured by the user. It is a cumulative metric and provides sum of all the values by default. This is applicable for metrics like request time, cpu temperature etc
+Histogram is a more complex metric type compared to the ones we have seen. Histogram can be used for any calculated value which is counted based on bucket values, the buckets can be configured by the user. It is a cumulative metric and provides sum of all the values by default. This is applicable for metrics like request time, cpu, temperature, etc.
 
 Example:
 I want to observe the time taken to process api requests. Instead of storing the request time for each request, histogram metric allows us to approximate and store frequency of requests which fall into particular buckets. I define buckets for time taken like 0.3,0.5,0.7,1,1.2. So these are my buckets and once the time taken for a request is calculated I add the count to all the buckets which are higher than the value.
@@ -215,10 +215,10 @@ Request 2 for endpoint “/ping” takes 0.4s The count values for the buckets w
 | 1 - 1.2   | 2     |
 | +Inf      | 2     |
 
-Since 0.4 lies in the seconds bucket(0.3-0.5) all the buckets above the calculated values count is increased.
+Since 0.4 lies in the seconds bucket(0.3-0.5) all the buckets above the calculated values count are increased.
 Histogram is used to find average and percentile values.
 
-Let's see a histogram metric scraped from prometheus and apply few functions.
+Let's see a histogram metric scraped from prometheus and apply a few functions.
 
 > prometheus_http_request_duration_seconds_bucket{handler="/graph"}
 
@@ -242,7 +242,7 @@ The graph shows that the 90th percentile is 0.09, To find the histogram_quantile
 
 ## Summary
 
-Summary is similar to histogram and calculates quantiles which can be configured, but it is calculated on the application level hence aggregation of metrics from multiple instances of the same process is not possible. It is used when the buckets of a metric is not known beforehand and is highly recommended to use histogram over summary whenever possible. Calculating summary on the application level is also quite expensive and it is not recommended to be used.
+Summary is similar to histogram and calculates quantiles which can be configured, but it is calculated on the application level hence aggregation of metrics from multiple instances of the same process is not possible. It is used when the buckets of a metric is not known beforehand and is highly recommended to use histogram over summary whenever possible. Calculating summary on the application level is also quite expensive and its usage is not recommended.
 
 ### Short Summary on Metric Types:
 
@@ -284,7 +284,7 @@ go build server.go
 ./server.go
 ```
 
-We have a simple server which when hit on localhost:8090/ping endpoint sends back pong
+We have a simple server which when hit on localhost:8090/ping endpoint sends back a pong
 
 <p align="center">
   <img width="1000" height="240" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/server.png">
@@ -372,7 +372,7 @@ go build server.go
 ```
 
 
-Now hit the localhost:8090/ping endpoint a couple of times and sending a request to localhost:8090 will provide the metrics.
+Now hit the localhost:8090/ping endpoint a couple of times, and the sending of a request to localhost:8090 will provide the metrics.
 
 <p align="center">
   <img width="1000" height="560" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/ping_count.png">
@@ -407,18 +407,18 @@ scrape_configs:
 
 Note:
 
-- Make sure the authentication mechanism used by your application is supported by prometheus
+- Make sure the authentication mechanism used by your application is supported by prometheus.
 - `promhttp.Handler` gzips the response, If you are using a gzip middleware then you must implement some skipper logic to avoid compressing the response twice.
 
 # Use Grafana to visualize metrics
 
-Now that we have our server with `ping_request_count` metric let's create a visualization dashboard. For this, we will use [Grafana](https://grafana.com/). If you wonder why should one use Grafana when we can create graphs using Prometheus. The answer is that the graph that we use to visualize our queries is used for ad-hoc queries and debugging. Prometheus official docs suggest using Grafana or Console Templates for graphs. [Refer](https://prometheus.io/docs/visualization/browser/)
+Now that we have our server with the `ping_request_count` metric let's create a visualization dashboard. For this, we will use [Grafana](https://grafana.com/). If you wonder why should one use Grafana when we can create graphs using Prometheus, the answer is that the graph that we use to visualize our queries is used for ad-hoc queries and debugging. Prometheus official docs suggest using Grafana or Console Templates for graphs. [Refer](https://prometheus.io/docs/visualization/browser/)
 
 Console Templates is a way to create graphs using Go templates which I am not covering as it has a learning curve. Grafana is an analytics platform that allows you to query,visualize, and set alerts on your metrics. Comparatively Grafana is easy to use for a beginner.
 
 Install Grafana by following the steps for your operating system from [here](https://grafana.com/docs/grafana/latest/installation/requirements/#supported-operating-systems).
 
-Once Grafana is installed successfully go to [localhost:3000](http://localhost:3000) and Grafana dashboard should be visible. The default username and password is `admin`.
+Once Grafana is installed successfully go to [localhost:3000](http://localhost:3000) and Grafana dashboard should be visible. The default username and password are `admin`.
 
 <p align="center">
   <img width="1000" height="420" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/grafana_login.png">
@@ -454,7 +454,7 @@ I hope I did justice to your time and helped you understand the basics of promet
 
 **Where to go from here:**
 
-- It is important to understand PromQL extensively to take advantage of the metrics which one has collected. Remember the goal is not just to collect metrics but to derive answers for application related questions. [This](https://medium.com/@valyala/promql-tutorial-for-beginners-9ab455142085) is a very good resource to get started with PromQL.
+- It is important to have a deep understanding of PromQL to take advantage of the metrics which one has collected. Remember that the goal is not just to collect metrics but to derive answers for application related questions. [This](https://medium.com/@valyala/promql-tutorial-for-beginners-9ab455142085) is a very good resource to get started with PromQL.
 
 To Do
 
