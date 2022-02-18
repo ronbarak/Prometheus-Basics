@@ -25,11 +25,11 @@ Prometheus is a system monitoring and alerting system. It was opensourced by Sou
 
 # What are metrics and why is it important?
 
-Metrics in layman terms is a standard for measurement. What we want to measure depends from application to application. For a web server it can be request times, for a database it can be CPU usage or number of active connections etc.
+Metrics in layman terms is a standard for measurement. What we want to measure differs from application to application. For a web server it can be request times, for a database it can be CPU usage or number of active connections etc.
 
-Metrics play an important role in understanding why your application is working in a certain way. If you run a web application and someone comes up to you and says that the application is slow. You will need some information to find out what is happening with your application. For example the application can become slow when the number of requests are high. If you have the request count metric you can spot the reason and increase the number of servers to handle the heavy load. Whenever you are defining the metrics for your application you must put on your detective hat and ask this question **what all information will be important for me to debug if any issue occurs in my application?**
+Metrics play an important role in understanding why your application is working in a certain way. If you run a web application and someone comes up to you and says that the application is slow. You will need some information to find out what is happening with your application. For example the application can become slow when the number of requests are high. If you have the request count metric you can spot the reason and increase the number of servers to handle the heavy load. Whenever you are defining the metrics for your application you must put on your detective hat and ask this question **what information will be important for me to help debugging - if any issue occurs in my application?**
 
-Analogy: I always use this analogy to simply understand what a monitoring system does. When I was young I wanted to grow tall and to measure it I used height as a metric. I asked my dad to measure my height everyday and keep a table of my height on each day. So in this case my dad is my monitoring system and the metric was my height.
+Analogy: I use this analogy to understand what a monitoring system does. When I was young I wanted to grow tall and to measure it I used height as a metric. I asked my dad to measure my height every day and keep a table of my height on each day. So in this case my dad is my monitoring system and the metric was my height.
 
 # Basic Architecture of Prometheus
 
@@ -49,11 +49,11 @@ Let's consider a web server as an example application. I want to extract a certa
 
 I set prometheus up and expose my web server to be accessible for the frontend or other client to use.
 
-At 11:00 PM when I make the server open to consumption. Prometheus scrapes the count metric and stores the value as 0
+At 11:00 PM I make the server open to consumption. Prometheus scrapes the count metric and stores the value as 0
 
-By 11:01 PM one request is processed. The instrumentation logic in my code makes the count to 1. When prometheus scraps the metric the value of count is 1 now
+By 11:01 PM one request is processed. The instrumentation logic in my code increases the count to 1. When prometheus scraps the metric the value of count is now 1.
 
-By 11:02 PM two requests are processed and the request count is 1+2 = 3 now. Similarly metrics are scraped and stored
+By 11:02 PM two requests are processed and the request count is 1+2 = 3 now. Similarly metrics are scraped and stored.
 
 The user can control the frequency at which metrics are scraped by prometheus
 
@@ -63,9 +63,9 @@ The user can control the frequency at which metrics are scraped by prometheus
 | 11:01 PM   | 1                      |
 | 11:02 PM   | 3                      |
 
-(Note: This table is just a representation for understanding purposes. Prometheus doesn’t store the values in the exact format)
+(Note: This table is just a representation for understanding purposes. Prometheus doesn’t store the values in this exact format)
 
-Prometheus also has a server which exposes the metrics which are stored by scraping. This server is used to query the metrics, create dashboards/charts on it etc. PromQL is used to query the metrics.
+Prometheus also has a server which exposes the metrics stored by scraping. This server is used to query the metrics, create dashboards/charts on it, etc. PromQL is used to query the metrics.
 
 A simple Line chart created on my Request Count metric will look like this
 
@@ -79,7 +79,7 @@ I can scrape multiple metrics which will be useful to understand what is happeni
 
 Let’s get our hands dirty and setup prometheus. Prometheus is written using [Go](https://golang.org/) and all you need is the binary compiled for your operating system. Download the binary corresponding to your operating system from [here](https://prometheus.io/download/) and add the binary to your path.
 
-Prometheus exposes its own metrics which can be consumed by itself or another prometheus server.
+The Prometheus server exposes its own metrics which can be consumed by itself or by another prometheus server.
 
 Now that we have Prometheus, the next step is to run it. All that we need is just the binary and a configuration file. Prometheus uses yaml files for configuration.
 
@@ -103,10 +103,10 @@ In the above configuration file we have mentioned the scrape_interval i.e how fr
   <img width="580" height="400" src="https://github.com/yolossn/Prometheus-Basics/blob/master/images/prometheus1.gif">
 </p>
 
-Now we have Prometheus up and running and scraping its own metrics every 15s. Prometheus has standard exporters available to export metrics. Next we will run a node exporter which is an exporter for machine metrics and scrape the same using prometheus.
+Now we have Prometheus up and running and scraping its own metrics every 15s. Prometheus has standard exporters available to export metrics. Next we will run a node exporter— which is an exporter for machine metrics—and scrape the same using prometheus.
 Download node metrics exporter from [here](https://prometheus.io/download/#node_exporter)
 
-There are many standard exporters available like node exporter you can find them [here](https://prometheus.io/docs/instrumenting/exporters)
+There are many standard exporters available besides node exporter: you can find them [here](https://prometheus.io/docs/instrumenting/exporters)
 
 **Run the node exporter in a terminal.**
 
